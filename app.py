@@ -31,19 +31,16 @@ def requires_auth(f):
 @app.route("/")
 @requires_auth
 def dashboard():
-    auth_time = time.time()
-    query_time = time.time()
-    subscriber_count = post_request()
+    # subscriber_count = post_request()
     # if time.time() - query_time < 600:
-    return render_template("index.html", count = subscriber_count)
+    # return render_template("index.html", count = subscriber_count)
+    return render_template("index.html", count = "551")
 
-@app.route("/subs")
-def subs():
-    subscriber_count = post_request()
-    return str(subscriber_count)
+# @app.route("/subs")
+# def subs():
+#     subscriber_count = post_request()
+#     return str(subscriber_count)
 
 
 if __name__ == '__main__':
-    app.debug = True
-
     app.run()
