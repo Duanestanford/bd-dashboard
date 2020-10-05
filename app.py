@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, Response
-from query import post_request
+# from query import post_request
 from functools import wraps
 import time
 import os
