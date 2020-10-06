@@ -10,7 +10,9 @@ def check_auth(username, password):
     """This function is called to check if a username /
     password combination is valid.
     """
-    return username == os.getenv('U') and password == os.getenv('P')
+    your_user = str(os.getenv('U'))
+    your_pass = str(os.getenv('P'))
+    return username == your_user and password == your_pass
 
 def authenticate():
     """Sends a 401 response that enables basic auth"""
@@ -35,12 +37,6 @@ def dashboard():
     # if time.time() - query_time < 600:
     # return render_template("index.html", count = subscriber_count)
     return render_template("index.html", count = "512")
-
-@app.route("/subs")
-def subs():
-    # subscriber_count = query.post_request()
-    # return str(subscriber_count)
-    return f"Envs are {os.getenv("U")},{os.getenv("P")},{os.getenv("EMAIL")}, and {os.getenv("PASS")}";
 
 
 if __name__ == '__main__':
