@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, Response
-# from query import post_request
+import query
 from functools import wraps
 import time
 import os
@@ -31,15 +31,14 @@ def requires_auth(f):
 @app.route("/")
 @requires_auth
 def dashboard():
-    # subscriber_count = post_request()
+    subscriber_count = query.post_request()
     # if time.time() - query_time < 600:
-    # return render_template("index.html", count = subscriber_count)
-    return render_template("index.html", count = "551")
+    return render_template("index.html", count = subscriber_count)
 
-# @app.route("/subs")
-# def subs():
-#     subscriber_count = post_request()
-#     return str(subscriber_count)
+@app.route("/subs")
+def subs():
+    subscriber_count = query.post_request()
+    return str(subscriber_count)
 
 
 if __name__ == '__main__':
