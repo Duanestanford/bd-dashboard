@@ -11,4 +11,6 @@ response = requests.post('https://www.beverage-digest.com/query', json={'query':
 
 json_response = response.json()
 
-token = f"token {json_response['data']['tokenCreate']['token']}"
+print(json_response)
+
+# token = f"token {json_response['data']['tokenCreate']['token']}"
