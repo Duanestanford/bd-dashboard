@@ -34,13 +34,13 @@ def dashboard():
     # subscriber_count = query.post_request()
     # if time.time() - query_time < 600:
     # return render_template("index.html", count = subscriber_count)
-    return render_template("index.html", count = "512"
+    return render_template("index.html", count = "512")
 
-# @app.route("/subs")
-# def subs():
-#     # subscriber_count = query.post_request()
-#     # return str(subscriber_count)
-#     return f"Envs are {os.getenv("U")},{os.getenv("P")},{os.getenv("EMAIL")}, and {os.getenv("PASS")}";
+@app.route("/subs")
+def subs():
+    # subscriber_count = query.post_request()
+    # return str(subscriber_count)
+    return f"Envs are {os.getenv("U")},{os.getenv("P")},{os.getenv("EMAIL")}, and {os.getenv("PASS")}";
 
 
 if __name__ == '__main__':
