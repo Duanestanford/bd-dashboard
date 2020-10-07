@@ -8,11 +8,12 @@ app = Flask(__name__)
 
 #DB Setup
 
+heroku_db = os.getenv('DATABASE_URL')
 user = os.getenv('DB_USER')
 password = os.getenv('DB_PASS')
 url = os.getenv('DB_URL')
 db_name = os.getenv('DB_NAME')
-heroku_db = os.getenv('DATBASE_URL')
+
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{user}:{password}@{url}/{db_name}'
 app.config['SQLALCHEMY_DATABASE_URI'] = heroku_db
