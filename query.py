@@ -18,4 +18,8 @@ def post_request():
 
     json_data = response.json()
 
-    return json_data['data']['_subscriptionStats']['count']
+    sub_count_with_free = json_data['data']['_subscriptionStats']['count']
+
+    sub_count = sub_count_with_free - 200
+
+    return sub_count

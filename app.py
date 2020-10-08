@@ -15,8 +15,8 @@ url = os.getenv('DB_URL')
 db_name = os.getenv('DB_NAME')
 
 
-# app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{user}:{password}@{url}/{db_name}'
-app.config['SQLALCHEMY_DATABASE_URI'] = heroku_db
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{user}:{password}@{url}/{db_name}'
+# app.config['SQLALCHEMY_DATABASE_URI'] = heroku_db
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
