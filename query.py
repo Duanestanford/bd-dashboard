@@ -20,6 +20,6 @@ def post_request():
 
     sub_count_active_only = json_data['data']['_subscriptionStats']['count']
 
-    sub_count = sub_count_active_only
+    sub_count = sub_count_active_only - 22
 
     return sub_count
