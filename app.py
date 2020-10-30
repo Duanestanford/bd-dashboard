@@ -15,8 +15,8 @@ url = os.getenv('DB_URL')
 db_name = os.getenv('DB_NAME')
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{user}:{password}@{url}/{db_name}'
-# app.config['SQLALCHEMY_DATABASE_URI'] = heroku_db
+# app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{user}:{password}@{url}/{db_name}'
+app.config['SQLALCHEMY_DATABASE_URI'] = heroku_db
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
@@ -45,6 +45,15 @@ class Sub_Count(db.Model):
     def __init__(self, now, sub_count):
         self.now = now
         self.sub_count = sub_count
+
+class Delegate_Count(db.Model):
+    __tablename__='delegate_count'
+    now = db.Column(db.String(300), primary_key = True, unique = True)
+    delegate_count = db.Column(db.Integer)
+
+    def __init__(self, now, delegate_count):
+        self.now = now
+        self.delegate_count = delegate_count
 
 
 def check_auth(username, password):
@@ -75,14 +84,28 @@ def requires_auth(f):
 @requires_auth
 def dashboard():
     import query
-    subscriber_count = query.post_request()
-    # if time.time() - query_time < 600:
+    subscriber_count = query.request_sub_count()
+    delegate_count = query.request_delegate_count()
     now = datetime.datetime.now()
-    data = Sub_Count(now, subscriber_count)
-    db.session.add(data)
+
+    subscriber_data = Sub_Count(now, subscriber_count)
+    db.session.add(subscriber_data)
     db.session.commit()
-    return render_template("index.html", count = subscriber_count)
-    # return render_template("index.html", count = "399")
+    db.session.close()
+
+    
+    delegates_data = Delegate_Count(now, delegate_count)
+    db.session.add(delegates_data)
+    db.session.commit()
+    db.session.close()
+
+    subscription_revenue_string = str(subscriber_count*995)
+    conference_revenue_string = str(delegate_count*425)
+
+    subscription_revenue= "${:,}".format(subscriber_count*995)
+    conference_revenue= "${:,}".format(delegate_count*425)
+
+    return render_template("index.html", subscriber_count = subscriber_count, delegate_count = delegate_count, subscription_revenue = subscription_revenue, conference_revenue = conference_revenue)
 
 
 if __name__ == '__main__':
