@@ -20,7 +20,7 @@ def request_sub_count():
 
     sub_count_active_only = json_data['data']['_subscriptionStats']['count']
 
-    sub_count = sub_count_active_only - 19
+    sub_count = sub_count_active_only - 319
 
     return sub_count
 
