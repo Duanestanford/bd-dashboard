@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, flash, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 import datetime
@@ -17,43 +17,46 @@ db_name = os.getenv('DB_NAME')
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{user}:{password}@{url}/{db_name}'
 app.config['SQLALCHEMY_DATABASE_URI'] = heroku_db
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = '\x13\xacqR\xc8\xc6\xb4lz\xd9\xb4\xd7\xb9\x9b\x17$U\x04Y\x90\xbf4.N'
 
 
 db = SQLAlchemy(app)
 
-class Brands(db.Model):
-    __tablename__ = 'brands'
-    brand = db.Column(db.String(200), primary_key = True, unique = True)
-    tm = db.Column(db.String(200), unique = True)
-    co = db.Column(db.String(200), unique = True)
-    cat = db.Column(db.String(200), unique = True)
-    subcat = db.Column(db.String(200), unique = True)
+# class Brands(db.Model):
+#     __tablename__ = 'brands'
+#     brand = db.Column(db.String(200), primary_key = True, unique = True)
+#     tm = db.Column(db.String(200), unique = True)
+#     co = db.Column(db.String(200), unique = True)
+#     cat = db.Column(db.String(200), unique = True)
+#     subcat = db.Column(db.String(200), unique = True)
 
-    def __init__(self, brand, tm, co, cat, subcat):
-        self.brand = brand
-        self.tm = tm
-        self.co = co
-        self.cat = cat
-        self.subcat = subcat
+#     def __init__(self, brand, tm, co, cat, subcat):
+#         self.brand = brand
+#         self.tm = tm
+#         self.co = co
+#         self.cat = cat
+#         self.subcat = subcat
 
-class Sub_Count(db.Model):
-    __tablename__='sub_count'
-    now = db.Column(db.String(300), primary_key = True, unique = True)
+class Subs(db.Model):
+    __tablename__='subs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    now = db.Column(db.String(300), unique = True)
     sub_count = db.Column(db.Integer)
 
     def __init__(self, now, sub_count):
         self.now = now
         self.sub_count = sub_count
 
-class Delegate_Count(db.Model):
-    __tablename__='delegate_count'
-    now = db.Column(db.String(300), primary_key = True, unique = True)
-    delegate_count = db.Column(db.Integer)
+class Free_Subs(db.Model):
+    __tablename__="free_subs"
+    id = db.Column(db.Integer, primary_key=True)
+    now = db.Column(db.String(300), unique = True)
+    free_subs = db.Column(db.Integer)
 
-    def __init__(self, now, delegate_count):
+    def __init__(self, now, free_subs):
         self.now = now
-        self.delegate_count = delegate_count
+        self.free_subs = free_subs
 
 
 def check_auth(username, password):
@@ -85,28 +88,45 @@ def requires_auth(f):
 def dashboard():
     import query
     subscriber_count = query.request_sub_count()
-    delegate_count = query.request_delegate_count()
     now = datetime.datetime.now()
 
-    subscriber_data = Sub_Count(now, subscriber_count)
-    db.session.add(subscriber_data)
-    db.session.commit()
-    db.session.close()
+    free_subs = Free_Subs.query.order_by(Free_Subs.id.desc()).first().free_subs
+
+    paid_subs = subscriber_count - free_subs
 
     
-    delegates_data = Delegate_Count(now, delegate_count)
-    db.session.add(delegates_data)
+    # subs_record = Subs(now, paid_subs)
+    # db.session.add(subs_record)
+    # db.session.commit()
+    # db.session.close()
+
+    subscription_revenue= "${:,}".format(paid_subs*995)
+
+    return render_template("index.html", paid_subs = paid_subs, free_subs = free_subs)
+
+
+@app.route('/plus', methods=["POST"])
+def plus():
+    now = datetime.datetime.now()
+    free_subs = Free_Subs.query.order_by(Free_Subs.id.desc()).first().free_subs
+    higher_free_subs = free_subs+1
+    new_subs = Free_Subs(now, higher_free_subs)
+    db.session.add(new_subs)
     db.session.commit()
-    db.session.close()
+    return redirect(url_for('dashboard'))
 
-    subscription_revenue_string = str(subscriber_count*995)
-    conference_revenue_string = str(delegate_count*425)
 
-    subscription_revenue= "${:,}".format(subscriber_count*995)
-    conference_revenue= "${:,}".format(delegate_count*425)
 
-    return render_template("index.html", subscriber_count = subscriber_count, delegate_count = delegate_count, subscription_revenue = subscription_revenue, conference_revenue = conference_revenue)
+@app.route('/minus', methods=["POST"])
+def minus():
+    now = datetime.datetime.now()
+    free_subs = Free_Subs.query.order_by(Free_Subs.id.desc()).first().free_subs
+    lower_free_subs = free_subs-1
+    new_subs = Free_Subs(now, lower_free_subs)
+    db.session.add(new_subs)
+    db.session.commit()
+    return redirect(url_for('dashboard'))
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, host='127.0.0.1', port = 3000)

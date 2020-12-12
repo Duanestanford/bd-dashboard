@@ -18,9 +18,9 @@ def request_sub_count():
 
     json_data = response.json()
 
-    sub_count_active_only = json_data['data']['_subscriptionStats']['count']
+    # Free Subs as of 2020/12/09: 21
 
-    sub_count = sub_count_active_only - 19
+    sub_count = json_data['data']['_subscriptionStats']['count']
 
     return sub_count
 
@@ -42,6 +42,4 @@ def request_delegate_count():
 
     all_delegates = json_data['data']['events'][0]['_attendantStats']['count']
 
-    paid_delagates = all_delegates - 5
-
-    return paid_delagates
+    return all_delegates

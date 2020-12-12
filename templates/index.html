@@ -7,7 +7,7 @@
 <link href="../static/styles.css" rel="stylesheet" type="text/css" media="all" />
 <link href="fonts.css" rel="stylesheet" type="text/css" media="all" />
 
-<link rel="icon" type="image/jpg" href="../static/images/fav.jpg">
+<link rel="icon" type="image/jpg" href="../static/images/fav2.png">
 <script src="static/js/app.js"></script>
 
 </head>
@@ -30,12 +30,26 @@
 <div id="wrapper2">
 	<div id="welcome" class="container">
 		<div class="title">
-			<h2><span style="color:#555555"> Subscriber Count:</span> {{subscriber_count}} </h2>
-			<h2><span style="color:#555555">Paid Delegate Count:</span> {{delegate_count}} </h2>
+			<h2><span style="color:#555555"> Paid Subscribers:</span> {{paid_subs}} </h2>
+			<br><br>
+
+
+			<form action = "/plus" method="POST">
+				<div>
+					<button type="submit" value="plus">Free +1</button>
+				</div>
+			</form>
+					<h1>Free Subs: {{free_subs}}</h1>
+			<form action = "/minus" method="POST">
+				<div>
+					<button type="submit" value = "minus">Free -1</button>
+				</div>
+			</form>
+			<br><br>
 			<p>&nbsp;</p>
-			<h3><span style="color:#555555">Subscriber Goal:</span> 1000 &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#555555">FS2020 Goal:</span> 180</h3>
+			<h3><span style="color:#555555">Subscriber Goal:</span> 1000</h3>
 			<p>&nbsp;</p>
-			<h3><span style="color:#555555">Newsletter:</span> {{subscription_revenue}} &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#555555">FS2020:</span> {{conference_revenue}}</h3>
+			<!-- <h3><span style="color:#555555">Newsletter:</span> {{subscription_revenue}}</h3> -->
 		</div>
 		<!-- <p>This is <strong>MetroBiz</strong>, a free, fully standards-compliant CSS template designed by <a href="http://templated.co" rel="nofollow">TEMPLATED</a>. The photos in this template are from <a href="http://fotogrph.com/"> Fotogrph</a>. This free template is released under the <a href="http://templated.co/license">Creative Commons Attribution</a> license, so you're pretty much free to do whatever you want with it (even use it commercially) provided you give us credit for it. Have fun :) </p> -->
 	</div>
