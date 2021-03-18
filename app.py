@@ -22,21 +22,6 @@ app.config['SECRET_KEY'] = '\x13\xacqR\xc8\xc6\xb4lz\xd9\xb4\xd7\xb9\x9b\x17$U\x
 
 db = SQLAlchemy(app)
 
-# class Brands(db.Model):
-#     __tablename__ = 'brands'
-#     brand = db.Column(db.String(200), primary_key = True, unique = True)
-#     tm = db.Column(db.String(200), unique = True)
-#     co = db.Column(db.String(200), unique = True)
-#     cat = db.Column(db.String(200), unique = True)
-#     subcat = db.Column(db.String(200), unique = True)
-
-#     def __init__(self, brand, tm, co, cat, subcat):
-#         self.brand = brand
-#         self.tm = tm
-#         self.co = co
-#         self.cat = cat
-#         self.subcat = subcat
-
 class Subs(db.Model):
     __tablename__='subs'
 
@@ -83,6 +68,8 @@ def requires_auth(f):
         return f(*args, **kwargs)
     return decorated
 
+from query import get_sys
+
 @app.route("/")
 @requires_auth
 def dashboard():
@@ -94,6 +81,14 @@ def dashboard():
 
     paid_subs = subscriber_count - free_subs
 
+    sys_sales, sys_count = get_sys()
+
+    clean_sys_sales = []
+
+    for item in sys_sales:
+        clean_sys_sales.append(sys_sales[item])
+
+
     
     # subs_record = Subs(now, paid_subs)
     # db.session.add(subs_record)
@@ -102,7 +97,7 @@ def dashboard():
 
     subscription_revenue= "${:,}".format(paid_subs*995)
 
-    return render_template("index.html", paid_subs = paid_subs, free_subs = free_subs)
+    return render_template("index.html", paid_subs = paid_subs, free_subs = free_subs, sys_sales = clean_sys_sales, sys_count = sys_count)
 
 
 @app.route('/plus', methods=["POST"])
