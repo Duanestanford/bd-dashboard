@@ -43,3 +43,35 @@ def request_delegate_count():
     all_delegates = json_data['data']['events'][0]['_attendantStats']['count']
 
     return all_delegates
+
+
+def get_sys():
+
+    count = 0;
+    
+    template = 'query {orderItems (perPage:100, page:19) {cost id status order {oid email} }}'
+
+    data_to_send = {
+        'query': template
+        }
+
+    url = 'https://www.beverage-digest.com/query'
+
+    headers = {'Content-Type': 'application/json',
+    'Authorization': f'{token}'}
+
+    response = requests.post(url, data=json.dumps(data_to_send), headers=headers)
+
+    json_data = response.json()
+
+    orders = json_data['data']['orderItems']
+
+    sys_sales = {}
+
+    for order in orders:
+        if order['cost'] == '895.00 USD' and order['order']['oid'] > 989:
+            count +=1
+            sys_sales[count] = order['order']['email']
+
+
+    return (sys_sales, count)
